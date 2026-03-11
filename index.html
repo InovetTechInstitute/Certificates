@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inovettech Certificate Verification</title>
+
+<style>
+body{
+font-family: Arial;
+text-align:center;
+margin-top:80px;
+}
+
+input{
+padding:10px;
+font-size:16px;
+width:260px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+background:#1e88e5;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+#result{
+margin-top:30px;
+font-size:18px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>INOVETTECH INSTITUTE</h1>
+<h2>Certificate Verification Portal</h2>
+
+<p>Enter Certificate ID</p>
+
+<input type="text" id="certID" placeholder="ITA-FSAP-2025-B02-001">
+<button onclick="verifyCert()">Verify</button>
+
+<div id="result"></div>
+
+<script>
+
+const certificates = [
+{
+id:"ITA-FSAP-2025-B02-001",
+name:"Rahul Patil",
+program:"Full Stack Automation Program",
+batch:"B02",
+date:"10 Apr 2025",
+status:"VALID"
+},
+
+{
+id:"ITA-FSAP-2025-B02-002",
+name:"Amit Sharma",
+program:"Full Stack Automation Program",
+batch:"B02",
+date:"10 Apr 2025",
+status:"VALID"
+}
+
+];
+
+function verifyCert(){
+
+let input=document.getElementById("certID").value;
+let result=document.getElementById("result");
+
+let cert=certificates.find(c=>c.id===input);
+
+if(cert){
+result.innerHTML=
+"<b>Student Name:</b> "+cert.name+"<br>"+
+"<b>Program:</b> "+cert.program+"<br>"+
+"<b>Batch:</b> "+cert.batch+"<br>"+
+"<b>Issue Date:</b> "+cert.date+"<br>"+
+"<b>Status:</b> "+cert.status;
+}
+else{
+result.innerHTML="Certificate ID not found";
+}
+
+}
+
+</script>
+
+</body>
+</html>
