@@ -1,94 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Inovettech Certificate Verification</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inovettech Certificate Verification</title>
 
-<style>
-body{
-font-family: Arial;
-text-align:center;
-margin-top:80px;
-}
+    <style>
+        /* Modern Reset & Background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
 
-input{
-padding:10px;
-font-size:16px;
-width:260px;
-}
+        /* Main Container Card */
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+        }
 
-button{
-padding:10px 20px;
-font-size:16px;
-background:#1e88e5;
-color:white;
-border:none;
-cursor:pointer;
-}
+        /* Logo Styling */
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
 
-#result{
-margin-top:30px;
-font-size:18px;
-}
-</style>
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #1e88e5;
+        }
 
+        h2 {
+            font-size: 16px;
+            font-weight: 400;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Input & Button Group */
+        .search-box {
+            margin-bottom: 25px;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #1e88e5;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background: #1e88e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #1565c0;
+        }
+
+        /* Result Area */
+        #result {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .status-valid {
+            color: #2e7d32;
+            font-weight: bold;
+            background: #e8f5e9;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: #d32f2f;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>INOVETTECH INSTITUTE</h1>
-<h2>Certificate Verification Portal</h2>
+<div class="container">
+    <img src="Innovatech Institute logo.png" alt="Inovettech Logo" class="logo">
 
-<p>Enter Certificate ID</p>
+    <h1>INOVETTECH INSTITUTE</h1>
+    <h2>Certificate Verification Portal</h2>
 
-<input type="text" id="certID" placeholder="ITA-FSAP-2025-B02-001">
-<button onclick="verifyCert()">Verify</button>
+    <div class="search-box">
+        <input type="text" id="certID" placeholder="Enter Certificate ID (e.g. ITA-FSAP...)">
+        <button onclick="verifyCert()">Verify Certificate</button>
+    </div>
 
-<div id="result"></div>
+    <div id="result"></div>
+</div>
 
 <script>
+    const certificates = [
+        {
+            id: "ITA-FSAP-2025-B02-001",
+            name: "Rahul Patil",
+            program: "Full Stack Automation Program",
+            batch: "B02",
+            date: "10 Apr 2025",
+            status: "VALID"
+        },
+        {
+            id: "ITA-FSAP-2025-B02-002",
+            name: "Amit Sharma",
+            program: "Full Stack Automation Program",
+            batch: "B02",
+            date: "10 Apr 2025",
+            status: "VALID"
+        }
+    ];
 
-const certificates = [
-{
-id:"ITA-FSAP-2025-B02-001",
-name:"Rahul Patil",
-program:"Full Stack Automation Program",
-batch:"B02",
-date:"10 Apr 2025",
-status:"VALID"
-},
+    function verifyCert() {
+        let input = document.getElementById("certID").value.trim();
+        let result = document.getElementById("result");
 
-{
-id:"ITA-FSAP-2025-B02-002",
-name:"Amit Sharma",
-program:"Full Stack Automation Program",
-batch:"B02",
-date:"10 Apr 2025",
-status:"VALID"
-}
+        let cert = certificates.find(c => c.id === input);
 
-];
-
-function verifyCert(){
-
-let input=document.getElementById("certID").value;
-let result=document.getElementById("result");
-
-let cert=certificates.find(c=>c.id===input);
-
-if(cert){
-result.innerHTML=
-"<b>Student Name:</b> "+cert.name+"<br>"+
-"<b>Program:</b> "+cert.program+"<br>"+
-"<b>Batch:</b> "+cert.batch+"<br>"+
-"<b>Issue Date:</b> "+cert.date+"<br>"+
-"<b>Status:</b> "+cert.status;
-}
-else{
-result.innerHTML="Certificate ID not found";
-}
-
-}
-
+        if (cert) {
+            result.innerHTML = `
+                <b>Student Name:</b> ${cert.name}<br>
+                <b>Program:</b> ${cert.program}<br>
+                <b>Batch:</b> ${cert.batch}<br>
+                <b>Issue Date:</b> ${cert.date}<br>
+                <b>Status:</b> <span class="status-valid">${cert.status} ✅</span>
+            `;
+        } else {
+            result.innerHTML = "<p class='error'>❌ Certificate ID not found. Please check and try again.</p>";
+        }
+    }
 </script>
 
 </body>
