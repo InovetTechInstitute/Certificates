@@ -1,170 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inovettech Certificate Verification</title>
+<script type="module">
+  // 1. Import Firebase and Firestore functions
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <style>
-        /* Modern Reset & Background */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
-        }
+  // 2. Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNy0MpNvXudKXAewiz-UE6lzpmpsBf-lA",
+    authDomain: "certificate-verification-c3384.firebaseapp.com",
+    projectId: "certificate-verification-c3384",
+    storageBucket: "certificate-verification-c3384.firebasestorage.app",
+    messagingSenderId: "296793319215",
+    appId: "1:296793319215:web:c4b5d9f2f4e91fe89ea3da"
+  };
 
-        /* Main Container Card */
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-        }
+  // 3. Initialize Firebase and Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-        /* Logo Styling */
-        .logo {
-            max-width: 150px;
-            margin-bottom: 20px;
-        }
+  // 4. The Verification Function
+  async function verifyCert() {
+    const input = document.getElementById("certID").value.trim();
+    const resultDiv = document.getElementById("result");
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            color: #1e88e5;
-        }
-
-        h2 {
-            font-size: 16px;
-            font-weight: 400;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        /* Input & Button Group */
-        .search-box {
-            margin-bottom: 25px;
-        }
-
-        input {
-            padding: 12px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            border-color: #1e88e5;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            background: #1e88e5;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #1565c0;
-        }
-
-        /* Result Area */
-        #result {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            text-align: left;
-            line-height: 1.6;
-        }
-
-        .status-valid {
-            color: #2e7d32;
-            font-weight: bold;
-            background: #e8f5e9;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        .error {
-            color: #d32f2f;
-            text-align: center;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-    <img src="InovetTech.png" alt="Inovettech Logo" class="logo">
-
-    <h1>INOVETTECH INSTITUTE</h1>
-    <h2>Certificate Verification Portal</h2>
-
-    <div class="search-box">
-        <input type="text" id="certID" placeholder="Enter Certificate ID (e.g. ITA-FSAP...)">
-        <button onclick="verifyCert()">Verify Certificate</button>
-    </div>
-
-    <div id="result"></div>
-</div>
-
-<script>
-    const certificates = [
-        {
-            id: "ITA-FSAP-2025-B02-001",
-            name: "Rahul Patil",
-            program: "Full Stack Automation Program",
-            batch: "B02",
-            date: "10 Apr 2025",
-            status: "VALID"
-        },
-        {
-            id: "ITA-FSAP-2025-B02-002",
-            name: "Amit Sharma",
-            program: "Full Stack Automation Program",
-            batch: "B02",
-            date: "10 Apr 2025",
-            status: "VALID"
-        }
-    ];
-
-    function verifyCert() {
-        let input = document.getElementById("certID").value.trim();
-        let result = document.getElementById("result");
-
-        let cert = certificates.find(c => c.id === input);
-
-        if (cert) {
-            result.innerHTML = `
-                <b>Student Name:</b> ${cert.name}<br>
-                <b>Program:</b> ${cert.program}<br>
-                <b>Batch:</b> ${cert.batch}<br>
-                <b>Issue Date:</b> ${cert.date}<br>
-                <b>Status:</b> <span class="status-valid">${cert.status} ✅</span>
-            `;
-        } else {
-            result.innerHTML = "<p class='error'>❌ Certificate ID not found. Please check and try again.</p>";
-        }
+    if (!input) {
+      resultDiv.innerHTML = "<p class='error'>Please enter a Certificate ID.</p>";
+      return;
     }
-</script>
 
-</body>
-</html>
+    resultDiv.innerHTML = "Searching...";
+
+    try {
+      // Look for the document in the "certificates" collection using the ID entered
+      const docRef = doc(db, "certificates", input);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const cert = docSnap.data();
+        resultDiv.innerHTML = `
+            <b>Student Name:</b> ${cert.name}<br>
+            <b>Program:</b> ${cert.program}<br>
+            <b>Batch:</b> ${cert.batch}<br>
+            <b>Issue Date:</b> ${cert.date}<br>
+            <b>Status:</b> <span class="status-valid">${cert.status || 'VALID'} ✅</span>
+        `;
+      } else {
+        resultDiv.innerHTML = "<p class='error'>❌ Certificate ID not found. Please check and try again.</p>";
+      }
+    } catch (error) {
+      console.error("Error fetching document:", error);
+      resultDiv.innerHTML = "<p class='error'>Error connecting to database.</p>";
+    }
+  }
+
+  // Expose function to the button (needed when using type="module")
+  window.verifyCert = verifyCert;
+</script>
