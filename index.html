@@ -126,29 +126,12 @@
     <div id="result"></div>
 </div>
 
-<script>
-    const certificates = [
-        {
-            id: "ITA-FSAP-2025-B02-001",
-            name: "Rahul Patil",
-            program: "Full Stack Automation Program",
-            batch: "B02",
-            date: "10 Apr 2025",
-            status: "VALID"
-        },
-        {
-            id: "ITA-FSAP-2025-B02-002",
-            name: "Amit Sharma",
-            program: "Full Stack Automation Program",
-            batch: "B02",
-            date: "10 Apr 2025",
-            status: "VALID"
-        }
-    ]; 
-    import "firebase/compat/firestore"
+    <script>
+        import "firebase/compat/firestore"
 
 const db = firebase.firestore();
 db.collection("cities").where("capital", "==", true)
+
 
     // 1. Firebase Configuration (Replace with your own from Firebase Console)
 const firebaseConfig = {
