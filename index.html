@@ -146,24 +146,61 @@
         }
     ];
 
-    function verifyCert() {
-        let input = document.getElementById("certID").value.trim();
-        let result = document.getElementById("result");
+    // 1. Firebase Configuration (Replace with your own from Firebase Console)
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_ID",
+  appId: "YOUR_APP_ID"
+};
 
-        let cert = certificates.find(c => c.id === input);
+// 2. Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-        if (cert) {
-            result.innerHTML = `
-                <b>Student Name:</b> ${cert.name}<br>
-                <b>Program:</b> ${cert.program}<br>
-                <b>Batch:</b> ${cert.batch}<br>
-                <b>Issue Date:</b> ${cert.date}<br>
-                <b>Status:</b> <span class="status-valid">${cert.status} ✅</span>
-            `;
-        } else {
-            result.innerHTML = "<p class='error'>❌ Certificate ID not found. Please check and try again.</p>";
-        }
+// 3. The Complete Verify Function
+async function verifyCert() {
+    const certId = document.getElementById('certId').value.trim();
+    const resultDiv = document.getElementById('result');
+
+    // Show a loading message
+    resultDiv.innerHTML = "Verifying...";
+
+    if (!certId) {
+        resultDiv.innerHTML = "<p style='color:red;'>Please enter a Certificate ID.</p>";
+        return;
     }
+
+    try {
+        // Look for the certificate in your 'certificates' collection
+        const q = db.collection("certificates").where("certificateId", "==", certId);
+        const querySnapshot = await q.get();
+
+        if (!querySnapshot.empty) {
+            // If found, display the details
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                resultDiv.innerHTML = `
+                    <div style="border: 2px solid green; padding: 15px; margin-top: 10px;">
+                        <h3 style="color: green;">✓ Verified Certificate</h3>
+                        <p><strong>Student Name:</strong> ${data.studentName}</p>
+                        <p><strong>Course:</strong> ${data.courseName}</p>
+                        <p><strong>Issue Date:</strong> ${data.issueDate}</p>
+                    </div>
+                `;
+            });
+        } else {
+            // If not found
+            resultDiv.innerHTML = "<p style='color:red;'>✘ Invalid Certificate ID. Please check and try again.</p>";
+        }
+    } catch (error) {
+        console.error("Error verifying certificate: ", error);
+        resultDiv.innerHTML = "<p style='color:red;'>Error connecting to database. Please try again later.</p>";
+    }
+}
+
 </script>
 
 </body>
